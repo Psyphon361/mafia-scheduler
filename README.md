@@ -125,15 +125,19 @@ Foundry is used to interact with the smart contract.
 
 Windows users need to use Windows Subsystem for Linux (WSL) because Foundry works best in a Linux environment.
 
-1. Install WSL:
+1. **Enable the WSL Feature on Windows**:
+   - Open **Control Panel** → **Programs** → **Turn Windows features on or off**.
+   - Scroll down and check the box for **Windows Subsystem for Linux**.
+   - Click **OK** and restart your computer when prompted.
+2. Install WSL:
    - Open a Command Prompt as Administrator (right-click Command Prompt and select "Run as administrator").
    - Run:
      ```bash
      wsl --install
      ```
    - This installs WSL and Ubuntu (a Linux distribution). Restart your computer if prompted.
-2. After restarting, open "Ubuntu" from the Start menu. It will set up Ubuntu and ask you to create a username and password.
-3. Install Foundry in WSL:
+3. After restarting, open "Ubuntu" from the Start menu. It will set up Ubuntu and ask you to create a username and password.
+4. Install Foundry in WSL:
    - Open your Ubuntu terminal (from the Start menu).
    - Install Foundry:
      ```bash
