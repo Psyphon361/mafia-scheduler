@@ -1,2 +1,4 @@
 .env
 node_modules
+.vscode
+mafia-scripts-foundry/broadcast

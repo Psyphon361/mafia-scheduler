@@ -1,35 +1,65 @@
 const { exec } = require("child_process");
-const cron = require("node-cron");
-
-// Load environment variables from .env file (optional but recommended)
 require("dotenv").config();
 
-// Define the command to execute
-const command = `forge script script/TrainSkillScript.s.sol:TrainSkillScript --rpc-url ${process.env.PLS_RPC_URL} --private-key MAFIA_KEY --broadcast`;
+// Define the commands
+const pls_command = `forge script script/PLS_TrainSkillScript.s.sol:PLS_TrainSkillScript --rpc-url ${process.env.PLS_RPC_URL} --account ${process.env.PLS_KEYSTORE_NAME} --password ${process.env.PLS_KEYSTORE_PASSWORD} --broadcast`;
+const bnb_command = `forge script script/BNB_TrainSkillScript.s.sol:BNB_TrainSkillScript --rpc-url ${process.env.BNB_RPC_URL} --account ${process.env.BNB_KEYSTORE_NAME} --password ${process.env.BNB_KEYSTORE_PASSWORD} --broadcast`;
 
-// Function to run the command
-function runTrainSkill() {
-    console.log(`[${new Date().toISOString()}] Running trainSkill command...`);
+// Load CHAIN_CHOICE from .env (default to 0 if not set)
+const chainChoice = parseInt(process.env.CHAIN_CHOICE || "0");
 
-    exec(command, (error, stdout, stderr) => {
+// Function to run the command for PLS
+function runTrainSkill_PLS() {
+    console.log(`[${new Date().toISOString()}] Running trainSkill command on PLS...`);
+    exec(pls_command, { cwd: "./mafia-scripts-foundry" }, (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error executing command: ${error.message}`);
+            console.error(`PLS Error: ${error.message}`);
             return;
         }
         if (stderr) {
-            console.error(`Command stderr: ${stderr}`);
+            console.error(`PLS stderr: ${stderr}`);
             return;
         }
-        console.log(`Command output: ${stdout}`);
+        console.log(`PLS output: ${stdout}`);
     });
 }
 
-// Schedule the command to run every 45 minutes
-cron.schedule("*/45 * * * *", () => {
-    runTrainSkill();
-});
+// Function to run the command for BNB
+function runTrainSkill_BNB() {
+    console.log(`[${new Date().toISOString()}] Running trainSkill command on BNB...`);
+    exec(bnb_command, { cwd: "./mafia-scripts-foundry" }, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`BNB Error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.error(`BNB stderr: ${stderr}`);
+            return;
+        }
+        console.log(`BNB output: ${stdout}`);
+    });
+}
 
-// Run it once immediately to test
+// Function to decide which chain(s) to run based on CHAIN_CHOICE
+function runTrainSkill() {
+    if (chainChoice === 0) {
+        runTrainSkill_PLS(); // Only PLS
+    } else if (chainChoice === 1) {
+        runTrainSkill_BNB(); // Only BNB
+    } else if (chainChoice === 2) {
+        runTrainSkill_PLS(); // Both
+        runTrainSkill_BNB();
+    } else {
+        console.error(`Invalid CHAIN_CHOICE: ${chainChoice}. Use 0 (PLS), 1 (BNB), or 2 (BOTH).`);
+    }
+}
+
+// Run every 50 minutes (50 * 60 * 1000 milliseconds)
+setInterval(() => {
+    runTrainSkill();
+}, 50 * 60 * 1000);
+
+// Run once immediately to test
 runTrainSkill();
 
-console.log("Scheduler started. Command will run every 45 minutes.");
+console.log("Scheduler started. Command will run every 50 minutes.");
