@@ -1,0 +1,3 @@
+[submodule "mafia-scripts-foundry"]
+	path = mafia-scripts-foundry
+	url = https://github.com/Psyphon361/mafia-scripts-foundry.git
