@@ -312,10 +312,10 @@ In the `mafia-cron-scheduler` directory, create a file named `.env`:
 Copy and paste this into your `.env` file, replacing the placeholders with your values:
 
 ```text
-PLS_RPC_URL=https://rpc.pulsechain.com
+PLS_RPC_URL=https://rpc-pulsechain.g4mm4.io
 BNB_RPC_URL=https://bsc-dataseed.bnbchain.org
-PLS_KEYSTORE_NAME=MARCHESI
-BNB_KEYSTORE_NAME=MARCHESI
+PLS_KEYSTORE_NAME=<your-pls-keystore-name>
+BNB_KEYSTORE_NAME=<your-bnb-keystore-name>
 PLS_KEYSTORE_PASSWORD=<your-pls-keystore-password>
 BNB_KEYSTORE_PASSWORD=<your-bnb-keystore-password>
 CHAIN_CHOICE=2  # 0 -> PLS, 1 -> BNB, 2 -> BOTH
