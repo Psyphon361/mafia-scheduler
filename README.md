@@ -272,7 +272,7 @@ Using `cast wallet import`, your private key is encrypted and stored securely on
 #### Import Your PulseChain Private Key:
 Run:
 ```bash
-cast wallet import <KEYSTORE_NAME> --private-key <YOUR_PRIVATE_KEY>
+cast wallet import <KEYSTORE_NAME> --interactive
 ```
 You’ll be prompted to enter your private key (without the `0x` prefix) and a password.
 Choose a strong password (e.g., at least 12 characters, mix of letters, numbers, and symbols). Write it down and store it securely (e.g., in a password manager or on paper in a safe place).
