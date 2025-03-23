@@ -347,7 +347,7 @@ Now you’re ready to run the scheduler!
 
 Run the script to ensure everything works:
 ```bash
-node run-trainskill.js
+node run-train-script.js
 ```
 
 You should see logs like:
@@ -361,7 +361,7 @@ Scheduler started. Command will run every 50 minutes.
 
 Start the script with pm2:
 ```bash
-pm2 start run-trainskill.js
+pm2 start run-train-script.js
 ```
 
 Save the pm2 process to ensure it runs on system startup:
@@ -371,14 +371,14 @@ pm2 save
 
 View the logs to confirm it’s running:
 ```bash
-pm2 logs run-trainskill
+pm2 logs run-train-script
 ```
 
 ### 3️⃣ Updating Configuration
 
 If you change the `.env` file (e.g., switch `CHAIN_CHOICE`), restart the pm2 process to apply the changes:
 ```bash
-pm2 restart run-trainskill
+pm2 restart run-train-script
 ```
 
 ### 4️⃣ Updating the Submodule
@@ -392,7 +392,7 @@ git submodule update --init --recursive
 ```
 Then restart the pm2 process:
 ```bash
-pm2 restart run-trainskill
+pm2 restart run-train-script
 ```
 
 ---
