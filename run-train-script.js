@@ -1,54 +1,87 @@
 const { exec } = require("child_process");
 require("dotenv").config();
 
-// Define the commands
-const pls_command = `forge script script/PLS_TrainSkillScript.s.sol:PLS_TrainSkillScript --rpc-url ${process.env.PLS_RPC_URL} --account ${process.env.PLS_KEYSTORE_NAME} --password ${process.env.PLS_KEYSTORE_PASSWORD} --broadcast`;
-const bnb_command = `forge script script/BNB_TrainSkillScript.s.sol:BNB_TrainSkillScript --rpc-url ${process.env.BNB_RPC_URL} --account ${process.env.BNB_KEYSTORE_NAME} --password ${process.env.BNB_KEYSTORE_PASSWORD} --broadcast`;
+// Define base commands (without account and password, which will be added dynamically)
+const plsBaseCommand = `forge script script/PLS_TrainSkillScript.s.sol:PLS_TrainSkillScript --rpc-url ${process.env.PLS_RPC_URL} --broadcast`;
+const bnbBaseCommand = `forge script script/BNB_TrainSkillScript.s.sol:BNB_TrainSkillScript --rpc-url ${process.env.BNB_RPC_URL} --broadcast --evm-version istanbul`;
 
 // Load CHAIN_CHOICE from .env (default to 0 if not set)
 const chainChoice = parseInt(process.env.CHAIN_CHOICE || "0");
 
-// Function to run the command for PLS
-function runTrainSkill_PLS() {
-    console.log(`[${new Date().toISOString()}] Running trainSkill command on PLS...`);
-    exec(pls_command, { cwd: "./mafia-scripts-foundry" }, (error, stdout, stderr) => {
+// Split keystore names and passwords into arrays, handling undefined/empty cases
+const plsKeystoreNames = process.env.PLS_KEYSTORE_NAME ? process.env.PLS_KEYSTORE_NAME.split(",").map(name => name.trim()) : [];
+const bnbKeystoreNames = process.env.BNB_KEYSTORE_NAME ? process.env.BNB_KEYSTORE_NAME.split(",").map(name => name.trim()) : [];
+const plsKeystorePasswords = process.env.PLS_KEYSTORE_PASSWORD ? process.env.PLS_KEYSTORE_PASSWORD.split(",").map(pw => pw.trim()) : [];
+const bnbKeystorePasswords = process.env.BNB_KEYSTORE_PASSWORD ? process.env.BNB_KEYSTORE_PASSWORD.split(",").map(pw => pw.trim()) : [];
+
+// Validate input
+if (plsKeystoreNames.length === 0 || bnbKeystoreNames.length === 0) {
+    console.error("Error: At least one keystore name must be provided for each chain.");
+    process.exit(1);
+}
+if (plsKeystoreNames.length !== plsKeystorePasswords.length || bnbKeystoreNames.length !== bnbKeystorePasswords.length) {
+    console.error("Error: Number of keystore names must match number of passwords for each chain.");
+    process.exit(1);
+}
+
+// Function to run the command for a single PLS keystore
+function runTrainSkill_PLS(keystoreName, keystorePassword) {
+    const plsCommand = `${plsBaseCommand} --account ${keystoreName} --password ${keystorePassword}`;
+    console.log(`[${new Date().toISOString()}] Running trainSkill command on PLS for keystore: ${keystoreName}...`);
+    exec(plsCommand, { cwd: "./mafia-scripts-foundry" }, (error, stdout, stderr) => {
         if (error) {
-            console.error(`PLS Error: ${error.message}`);
+            console.error(`PLS Error for ${keystoreName}: ${error.message}`);
             return;
         }
         if (stderr) {
-            console.error(`PLS stderr: ${stderr}`);
+            console.error(`PLS stderr for ${keystoreName}: ${stderr}`);
             return;
         }
-        console.log(`PLS output: ${stdout}`);
+        console.log(`PLS output for ${keystoreName}: ${stdout}`);
     });
 }
 
-// Function to run the command for BNB
-function runTrainSkill_BNB() {
-    console.log(`[${new Date().toISOString()}] Running trainSkill command on BNB...`);
-    exec(bnb_command, { cwd: "./mafia-scripts-foundry" }, (error, stdout, stderr) => {
+// Function to run the command for a single BNB keystore
+function runTrainSkill_BNB(keystoreName, keystorePassword) {
+    const bnbCommand = `${bnbBaseCommand} --account ${keystoreName} --password ${keystorePassword}`;
+    console.log(`[${new Date().toISOString()}] Running trainSkill command on BNB for keystore: ${keystoreName}...`);
+    exec(bnbCommand, { cwd: "./mafia-scripts-foundry" }, (error, stdout, stderr) => {
         if (error) {
-            console.error(`BNB Error: ${error.message}`);
+            console.error(`BNB Error for ${keystoreName}: ${error.message}`);
             return;
         }
         if (stderr) {
-            console.error(`BNB stderr: ${stderr}`);
+            console.error(`BNB stderr for ${keystoreName}: ${stderr}`);
             return;
         }
-        console.log(`BNB output: ${stdout}`);
+        console.log(`BNB output for ${keystoreName}: ${stdout}`);
     });
 }
 
-// Function to decide which chain(s) to run based on CHAIN_CHOICE
+// Function to run trainSkill for all wallets based on CHAIN_CHOICE
 function runTrainSkill() {
     if (chainChoice === 0) {
-        runTrainSkill_PLS(); // Only PLS
+        // Run for all PLS wallets
+        plsKeystoreNames.forEach((keystoreName, index) => {
+            const keystorePassword = plsKeystorePasswords[index];
+            runTrainSkill_PLS(keystoreName, keystorePassword);
+        });
     } else if (chainChoice === 1) {
-        runTrainSkill_BNB(); // Only BNB
+        // Run for all BNB wallets
+        bnbKeystoreNames.forEach((keystoreName, index) => {
+            const keystorePassword = bnbKeystorePasswords[index];
+            runTrainSkill_BNB(keystoreName, keystorePassword);
+        });
     } else if (chainChoice === 2) {
-        runTrainSkill_PLS(); // Both
-        runTrainSkill_BNB();
+        // Run for all PLS and BNB wallets
+        plsKeystoreNames.forEach((keystoreName, index) => {
+            const keystorePassword = plsKeystorePasswords[index];
+            runTrainSkill_PLS(keystoreName, keystorePassword);
+        });
+        bnbKeystoreNames.forEach((keystoreName, index) => {
+            const keystorePassword = bnbKeystorePasswords[index];
+            runTrainSkill_BNB(keystoreName, keystorePassword);
+        });
     } else {
         console.error(`Invalid CHAIN_CHOICE: ${chainChoice}. Use 0 (PLS), 1 (BNB), or 2 (BOTH).`);
     }
