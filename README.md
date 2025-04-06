@@ -333,6 +333,27 @@ CHAIN_CHOICE=2  # 0 -> PLS, 1 -> BNB, 2 -> BOTH
   - `1`: BNB Chain only
   - `2`: Both chains
 
+## 📤 Using Multiple Wallets
+
+To manage multiple wallets, you can specify a comma-separated list of keystore names and their corresponding passwords in the `.env` file. The script will execute the `trainSkill` function for each wallet sequentially based on the `CHAIN_CHOICE` setting.
+
+### How to Configure
+- Update the following variables in your `.env` file with comma-separated values:
+  - `PLS_KEYSTORE_NAME`: List of keystore names for PulseChain.
+  - `BNB_KEYSTORE_NAME`: List of keystore names for BNB Chain.
+  - `PLS_KEYSTORE_PASSWORD`: List of passwords corresponding to the PulseChain keystore names.
+  - `BNB_KEYSTORE_PASSWORD`: List of passwords corresponding to the BNB Chain keystore names.
+- Ensure the order of names and passwords matches (e.g., the first name pairs with the first password).
+
+### Example
+```plaintext
+PLS_KEYSTORE_NAME=MARCHESI,VALENTINI,ROSSI
+BNB_KEYSTORE_NAME=MARCHESI,VALENTINI,ROSSI
+PLS_KEYSTORE_PASSWORD=marchesi,valentini,rossi
+BNB_KEYSTORE_PASSWORD=marchesi,valentini,rossi
+CHAIN_CHOICE=2
+```
+
 ### Save and Exit:
 If using nano, press `Ctrl+O`, then `Enter` to save, and `Ctrl+X` to exit.
 
