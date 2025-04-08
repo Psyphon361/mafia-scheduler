@@ -1,6 +1,6 @@
-# 🚀 Mafia Cron Scheduler: Automate Your DeFi Game on PulseChain and BNB Chain 🌟
+# 🚀 Mafia Scheduler: Automate Your DeFi Game on PulseChain and BNB Chain 🌟
 
-Welcome to the **Mafia Cron Scheduler**! This project automates calling the `trainSkill` function on a DeFi game smart contract on **PulseChain** and **BNB Chain** every 50 minutes. Whether you're a tech newbie or a seasoned developer, this guide will walk you through everything you need to get started on **Windows**, **Linux**, or **macOS**. Let’s dive in! 🏁
+Welcome to the **Mafia Scheduler**! This project automates calling the `trainSkill` function on a DeFi game smart contract on **PulseChain** and **BNB Chain** every 50 minutes. Whether you're a tech newbie or a seasoned developer, this guide will walk you through everything you need to get started on **Windows**, **Linux**, or **macOS**. Let’s dive in! 🏁
 
 ---
 
@@ -236,7 +236,7 @@ Let’s set up the project step-by-step.
 
 ### 1️⃣ Install Node.js Dependencies
 
-In the `mafia-cron-scheduler` directory, install the required Node.js packages:
+In the `mafia-scheduler` directory, install the required Node.js packages:
 ```bash
 npm install
 ```
@@ -300,7 +300,7 @@ If you’re using the same private key for both chains, you can skip this step a
 The `.env` file stores your configuration settings. Let’s create it.
 
 ### Create the File:
-In the `mafia-cron-scheduler` directory, create a file named `.env`:
+In the `mafia-scheduler` directory, create a file named `.env`:
 
 - **Windows (WSL)/Linux/macOS:** Use a text editor like nano:
   ```bash
@@ -319,6 +319,8 @@ BNB_KEYSTORE_NAME=<your-bnb-keystore-name>
 PLS_KEYSTORE_PASSWORD=<your-pls-keystore-password>
 BNB_KEYSTORE_PASSWORD=<your-bnb-keystore-password>
 CHAIN_CHOICE=2  # 0 -> PLS, 1 -> BNB, 2 -> BOTH
+PLS_TRAIN_TYPE=1  # 0 -> BOTTLES_IN_BACKYARD, 1 -> DAY_AT_SHOOTING_RANGE, 2 -> HIRE_A_PERSONAL_TRAINER
+BNB_TRAIN_TYPE=1  # 0 -> BOTTLES_IN_BACKYARD, 1 -> DAY_AT_SHOOTING_RANGE, 2 -> HIRE_A_PERSONAL_TRAINER
 ```
 
 ### Explanation:
@@ -332,6 +334,14 @@ CHAIN_CHOICE=2  # 0 -> PLS, 1 -> BNB, 2 -> BOTH
   - `0`: PulseChain only
   - `1`: BNB Chain only
   - `2`: Both chains
+- `PLS_TRAIN_TYPE`: The type of skill to train on PulseChain (default is `0` for `BOTTLES_IN_BACKYARD`):
+  - `0`: `BOTTLES_IN_BACKYARD`
+  - `1`: `DAY_AT_SHOOTING_RANGE`
+  - `2`: `HIRE_A_PERSONAL_TRAINER`
+- `BNB_TRAIN_TYPE`: The type of skill to train on BNB Chain (default is `0` for `BOTTLES_IN_BACKYARD`):
+  - `0`: `BOTTLES_IN_BACKYARD`
+  - `1`: `DAY_AT_SHOOTING_RANGE`
+  - `2`: `HIRE_A_PERSONAL_TRAINER`
 
 ## 📤 Using Multiple Wallets
 
@@ -352,6 +362,8 @@ BNB_KEYSTORE_NAME=MARCHESI,VALENTINI,ROSSI
 PLS_KEYSTORE_PASSWORD=marchesi,valentini,rossi
 BNB_KEYSTORE_PASSWORD=marchesi,valentini,rossi
 CHAIN_CHOICE=2
+PLS_TRAIN_TYPE=1
+BNB_TRAIN_TYPE=1
 ```
 
 ### Save and Exit:
@@ -489,7 +501,7 @@ Security is critical when dealing with private keys and blockchain transactions.
 
 ## 🎉 Congratulations!
 
-You’ve successfully set up the Mafia Cron Scheduler! Your script will now run every 50 minutes, automating your DeFi game on PulseChain, BNB Chain, or both. If you have any questions or run into issues, feel free to reach out. Happy automating! 🚀
+You’ve successfully set up the Mafia Scheduler! Your script will now run every 50 minutes, automating your DeFi game on PulseChain, BNB Chain, or both. If you have any questions or run into issues, feel free to reach out. Happy automating! 🚀
 
 ---
 

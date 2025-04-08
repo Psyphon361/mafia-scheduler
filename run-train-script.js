@@ -3,10 +3,12 @@ require("dotenv").config();
 
 // Define base commands (without account and password, which will be added dynamically)
 const plsBaseCommand = `forge script script/PLS_TrainSkillScript.s.sol:PLS_TrainSkillScript --rpc-url ${process.env.PLS_RPC_URL} --broadcast`;
-const bnbBaseCommand = `forge script script/BNB_TrainSkillScript.s.sol:BNB_TrainSkillScript --rpc-url ${process.env.BNB_RPC_URL} --broadcast --evm-version istanbul`;
+const bnbBaseCommand = `forge script script/BNB_TrainSkillScript.s.sol:BNB_TrainSkillScript --rpc-url ${process.env.BNB_RPC_URL} --broadcast`;
 
-// Load CHAIN_CHOICE from .env (default to 0 if not set)
+// Load CHAIN_CHOICE and trainType from .env (default to 0 if not set)
 const chainChoice = parseInt(process.env.CHAIN_CHOICE || "0");
+const plsTrainType = parseInt(process.env.PLS_TRAIN_TYPE || "0"); // Default to BOTTLES_IN_BACKYARD (0)
+const bnbTrainType = parseInt(process.env.BNB_TRAIN_TYPE || "0"); // Default to BOTTLES_IN_BACKYARD (0)
 
 // Split keystore names and passwords into arrays, handling undefined/empty cases
 const plsKeystoreNames = process.env.PLS_KEYSTORE_NAME ? process.env.PLS_KEYSTORE_NAME.split(",").map(name => name.trim()) : [];
@@ -26,8 +28,8 @@ if (plsKeystoreNames.length !== plsKeystorePasswords.length || bnbKeystoreNames.
 
 // Function to run the command for a single PLS keystore
 function runTrainSkill_PLS(keystoreName, keystorePassword) {
-    const plsCommand = `${plsBaseCommand} --account ${keystoreName} --password ${keystorePassword}`;
-    console.log(`[${new Date().toISOString()}] Running trainSkill command on PLS for keystore: ${keystoreName}...`);
+    const plsCommand = `${plsBaseCommand} --account ${keystoreName} --password ${keystorePassword} --sig "run(uint8)" ${plsTrainType}`;
+    console.log(`[${new Date().toISOString()}] Running trainSkill command on PLS for keystore: ${keystoreName} with trainType: ${plsTrainType}...`);
     exec(plsCommand, { cwd: "./mafia-scripts-foundry" }, (error, stdout, stderr) => {
         if (error) {
             console.error(`PLS Error for ${keystoreName}: ${error.message}`);
@@ -43,8 +45,8 @@ function runTrainSkill_PLS(keystoreName, keystorePassword) {
 
 // Function to run the command for a single BNB keystore
 function runTrainSkill_BNB(keystoreName, keystorePassword) {
-    const bnbCommand = `${bnbBaseCommand} --account ${keystoreName} --password ${keystorePassword}`;
-    console.log(`[${new Date().toISOString()}] Running trainSkill command on BNB for keystore: ${keystoreName}...`);
+    const bnbCommand = `${bnbBaseCommand} --account ${keystoreName} --password ${keystorePassword} --sig "run(uint8)" ${bnbTrainType}`;
+    console.log(`[${new Date().toISOString()}] Running trainSkill command on BNB for keystore: ${keystoreName} with trainType: ${bnbTrainType}...`);
     exec(bnbCommand, { cwd: "./mafia-scripts-foundry" }, (error, stdout, stderr) => {
         if (error) {
             console.error(`BNB Error for ${keystoreName}: ${error.message}`);
