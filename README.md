@@ -77,15 +77,7 @@ If Homebrew is not already installed on your macOS, you can install it by runnin
 Node.js is used to run the scheduler script.
 
 #### Windows
-
-1. Download the Node.js installer from [nodejs.org](https://nodejs.org). Choose the "LTS" version.
-2. Run the installer and follow the prompts. Make sure to check the box to install npm (Node Package Manager).
-3. Open a Command Prompt and verify Node.js and npm are installed:
-   ```bash
-   node -v
-   npm -v
-   ```
-   You should see versions like `v20.X.X` for Node.js and `10.X.X` for npm.
+PLEASE FOLLOW THE LINUX STEPS IN WSL TERMINAL IF `nodejs` AND `npm` are not installed by default.
 
 #### Linux
 
