@@ -25,15 +25,7 @@ Before you start, you need to install some tools. Follow the instructions for yo
 Git is used to download the project code from GitHub.
 
 ## Windows
-1. Download the Git installer from [git-scm.com](https://git-scm.com/).
-2. Run the installer and follow the prompts. Use the default settings unless you have a specific reason to change them.
-3. Open a Command Prompt (search for **cmd** in the Start menu) and verify Git is installed:
-
-```bash
-git --version
-```
-
-You should see something like `git version 2.XX.X`.
+Follow Linux steps on WSL if not installed by default (WSL install guide in Section #3)
 
 ## Linux
 1. Open a terminal (Ctrl+Alt+T on Ubuntu).
@@ -77,7 +69,7 @@ If Homebrew is not already installed on your macOS, you can install it by runnin
 Node.js is used to run the scheduler script.
 
 #### Windows
-PLEASE FOLLOW THE LINUX STEPS IN WSL TERMINAL IF `nodejs` AND `npm` are not installed by default.
+Follow Linux steps on WSL if not installed by default (WSL install guide in Section #3)
 
 #### Linux
 
