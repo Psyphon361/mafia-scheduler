@@ -32,8 +32,6 @@ const plsNickCarTypes =
 const bnbNickCarTypes =
   chainChoice === 1 || chainChoice === 2 ? process.env.BNB_NICK_CAR_TYPE?.split(",").map((type) => type?.trim() === 'false' ? false : parseInt(type.trim())) ?? [0] : [];
 
-console.log(bnbNickCarTypes);
-
 // Validation
 if (
   (chainChoice === 0 || chainChoice === 2) &&
