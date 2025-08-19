@@ -32,6 +32,7 @@ const plsNickCarTypes =
 const bnbNickCarTypes =
   chainChoice === 1 || chainChoice === 2 ? process.env.BNB_NICK_CAR_TYPE?.split(",").map((type) => type?.trim() === 'false' ? false : parseInt(type.trim())) ?? [0] : [];
 
+<<<<<<< HEAD
 const plsJailBust =
   chainChoice === 1 || chainChoice === 2 ? 
     process.env.PLS_JAIL_BUST?.split(",").map((type) => !!type?.trim() || false ) ?? [] 
@@ -45,6 +46,13 @@ const bnbJailBust =
 console.log('pls jail bust', plsJailBust);
 console.log('bnb jail bust', bnbJailBust);
 
+=======
+<<<<<<< HEAD
+=======
+console.log(bnbNickCarTypes);
+
+>>>>>>> 87b915a (Added support for Nick Car)
+>>>>>>> 73490cb (Added support for Nick Car)
 // Validation
 if (
   (chainChoice === 0 || chainChoice === 2) &&
