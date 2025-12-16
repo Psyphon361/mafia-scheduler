@@ -32,10 +32,7 @@ const plsNickCarTypes =
 const bnbNickCarTypes =
   chainChoice === 1 || chainChoice === 2 ? process.env.BNB_NICK_CAR_TYPE?.split(",").map((type) => type?.trim() === 'false' ? false : parseInt(type.trim())) ?? [0] : [];
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 53c239c (Added support for jailbust)
+
 const plsJailBust =
   chainChoice === 1 || chainChoice === 2 ? 
     process.env.PLS_JAIL_BUST?.split(",").map((type) => !!type?.trim() || false ) ?? [] 
@@ -48,18 +45,7 @@ const bnbJailBust =
 
 console.log('pls jail bust', plsJailBust);
 console.log('bnb jail bust', bnbJailBust);
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-=======
-console.log(bnbNickCarTypes);
-
->>>>>>> 87b915a (Added support for Nick Car)
->>>>>>> 73490cb (Added support for Nick Car)
-=======
-
->>>>>>> 53c239c (Added support for jailbust)
 // Validation
 if (
   (chainChoice === 0 || chainChoice === 2) &&
@@ -356,109 +342,118 @@ function runNickCar() {
 
 async function runJailbust() {
 
-  if (chainChoice === 0 || chainChoice === 2) {
+  try {
+    if (chainChoice === 0 || chainChoice === 2) {
 
-    const plsBusters = plsKeystoreNames.map((keystoreName, index) => {
-      const keystorePassword = plsKeystorePasswords[index];
-      const jailBust = plsJailBust[index];
-      if (jailBust) {
-        return {
-          keystoreName,
-          keystorePassword
-        };
-      }
-    }).filter(i => i);
-
-    // if there is at least 1 buster, let em loose 
-    if (plsBusters?.length) {
-
-      if (!plsNames) plsNames = await getNames('pls');
-
-      getPrisoners('pls').then(prisoners => {
-
-        if (prisoners?.length) {
-
-          let refreshCache = false;
-          prisoners = prisoners.map(p => {
-            const address = plsNames.find(n => n?.name == p?.name)?.address;
-            if (!address) refreshCache = true;
-            else p.address = address;
-            return p;
-          });
-
-          if (refreshCache) plsNames = null;
-
-          console.log("PLS prisoners", prisoners.length);
-          // sort prisoners easiest -> hardest
-          const now = Date.now() / 1000;
-          prisoners = prisoners
-            .filter(p => p.jailedUntil > now) // still jailed
-            .sort((a, b) => a.jailedUntil - b.jailedUntil); // ascending = soonest first
-
-          const nextPrisoner = createRoundRobin(prisoners);
-
-          for (const buster of plsBusters) {
-            const prisoner = nextPrisoner();
-            if (prisoner.address)
-              runJailBust_PLS(buster.keystoreName, buster.keystorePassword, prisoner.address);
-          }
+      const plsBusters = plsKeystoreNames.map((keystoreName, index) => {
+        const keystorePassword = plsKeystorePasswords[index];
+        const jailBust = plsJailBust[index];
+        if (jailBust) {
+          return {
+            keystoreName,
+            keystorePassword
+          };
         }
-      });
-    }
+      }).filter(i => i);
 
+      // if there is at least 1 buster, let em loose 
+      if (plsBusters?.length) {
+
+        if (!plsNames) plsNames = await getNames('pls');
+
+        getPrisoners('pls').then(prisoners => {
+
+          if (prisoners?.length) {
+
+            let refreshCache = false;
+            prisoners = prisoners.map(p => {
+              const address = plsNames.find(n => n?.name == p?.name)?.address;
+              if (!address) refreshCache = true;
+              else p.address = address;
+              return p;
+            });
+
+            if (refreshCache) plsNames = null;
+
+            console.log("PLS prisoners", prisoners.length);
+            // sort prisoners easiest -> hardest
+            const now = Date.now() / 1000;
+            prisoners = prisoners
+              .filter(p => p.jailedUntil > now) // still jailed
+              .sort((a, b) => a.jailedUntil - b.jailedUntil); // ascending = soonest first
+
+            const nextPrisoner = createRoundRobin(prisoners);
+
+            for (const buster of plsBusters) {
+              const prisoner = nextPrisoner();
+              if (prisoner.address)
+                runJailBust_PLS(buster.keystoreName, buster.keystorePassword, prisoner.address);
+            }
+          }
+        });
+      }
+
+    }
+  } catch (err) {
+    console.error(err);
   }
 
-  if (chainChoice === 1 || chainChoice === 2) {
+  
+  try {
+    if (chainChoice === 1 || chainChoice === 2) {
 
-    const bnbBusters = bnbKeystoreNames.map((keystoreName, index) => {
-      const keystorePassword = bnbKeystorePasswords[index];
-      const jailBust = bnbJailBust[index];
-      if (jailBust) {
-        return {
-          keystoreName,
-          keystorePassword
-        };
-      }
-    }).filter(i => i);
-
-    // if there is at least 1 buster, let em loose 
-    if (bnbBusters?.length) {
-
-      if (!bnbNames) bnbNames = await getNames('bnb');
-
-      getPrisoners('bnb').then(prisoners => {
-        if (prisoners?.length) {
-
-          let refreshCache = false;
-          prisoners = prisoners.map(p => {
-            const address = bnbNames.find(n => n?.name == p?.name)?.address;
-            if (!address) refreshCache = true;
-            else p.address = address;
-            return p;
-          });
-
-          if (refreshCache) bnbNames = null;
-
-          console.log("BNB prisoners", prisoners.length);
-
-          // sort prisoners easiest -> hardest
-          // less time to serve are easeir to bust.
-          const now = Date.now() / 1000;
-          prisoners = prisoners
-            .filter(p => p.jailedUntil > now) // still jailed
-            .sort((a, b) => a.jailedUntil - b.jailedUntil); // ascending = soonest first
-
-          const nextPrisoner = createRoundRobin(prisoners);
-
-          for (const buster of bnbBusters) {
-            const prisoner = nextPrisoner();
-            if (prisoner.address)
-              runJailBust_BNB(buster.keystoreName, buster.keystorePassword, prisoner.address);
-          }
+      const bnbBusters = bnbKeystoreNames.map((keystoreName, index) => {
+        const keystorePassword = bnbKeystorePasswords[index];
+        const jailBust = bnbJailBust[index];
+        if (jailBust) {
+          return {
+            keystoreName,
+            keystorePassword
+          };
         }
-      });
-    }
+      }).filter(i => i);
 
+      // if there is at least 1 buster, let em loose 
+      if (bnbBusters?.length) {
+
+        if (!bnbNames) bnbNames = await getNames('bnb');
+
+        getPrisoners('bnb').then(prisoners => {
+          if (prisoners?.length) {
+
+            let refreshCache = false;
+            prisoners = prisoners.map(p => {
+              const address = bnbNames.find(n => n?.name == p?.name)?.address;
+              if (!address) refreshCache = true;
+              else p.address = address;
+              return p;
+            });
+
+            if (refreshCache) bnbNames = null;
+
+            console.log("BNB prisoners", prisoners.length);
+
+            // sort prisoners easiest -> hardest
+            // less time to serve are easeir to bust.
+            const now = Date.now() / 1000;
+            prisoners = prisoners
+              .filter(p => p.jailedUntil > now) // still jailed
+              .sort((a, b) => a.jailedUntil - b.jailedUntil); // ascending = soonest first
+
+            const nextPrisoner = createRoundRobin(prisoners);
+
+            for (const buster of bnbBusters) {
+              const prisoner = nextPrisoner();
+              if (prisoner.address)
+                runJailBust_BNB(buster.keystoreName, buster.keystorePassword, prisoner.address);
+            }
+          }
+        });
+      }
+
+    }
+  } catch (err) {
+    console.error(err);
   }
 }
 
