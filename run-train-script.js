@@ -34,7 +34,7 @@ const bnbNickCarTypes =
 
 
 const plsJailBust =
-  chainChoice === 1 || chainChoice === 2 ? 
+  chainChoice === 0 || chainChoice === 2 ? 
     process.env.PLS_JAIL_BUST?.split(",").map((type) => !!type?.trim() || false ) ?? [] 
     : [];
 
